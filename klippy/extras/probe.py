@@ -379,6 +379,10 @@ class ProbePointsHelper:
             curpos[0] -= self.probe_offsets[0]
             curpos[1] -= self.probe_offsets[1]
         toolhead.move(curpos, self.speed)
+        # Starting Z is the same as the last Z, if user wants
+        if self.use_last_point == 1 and len(self.results) > 0:
+            curpos[2] += self.results[-1][2]
+            toolhead.move(curpos, self.speed)
         self.gcode.reset_last_position()
         return False
     def start_probe(self, params):
@@ -391,6 +395,7 @@ class ProbePointsHelper:
             # Manual probe
             self.lift_speed = self.speed
             self.probe_offsets = (0., 0., 0.)
+            self.use_last_point = self.gcode.get_int('USE_LAST_POINT', params, 0)
             self._manual_probe_start()
             return
         # Perform automatic probing

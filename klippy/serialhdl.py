@@ -5,7 +5,7 @@
 # This file may be distributed under the terms of the GNU GPLv3 license.
 import logging, threading
 import serial
-
+import traceback, sys
 import msgproto, chelper, util
 
 class error(Exception):
@@ -221,7 +221,9 @@ class SerialReader:
     def handle_output(self, params):
         logging.info("%s: %s", params['#name'], params['#msg'])
     def handle_default(self, params):
+        #pass
         logging.warn("got %s", params)
+        #traceback.print_stack(file=sys.stdout) 
     def __del__(self):
         self.disconnect()
 
